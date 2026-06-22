@@ -6,6 +6,7 @@ from dateutil import parser as date_parser
 from google.oauth2.service_account import Credentials
 
 from config import (
+    CLASSIFY_SYSTEM_PROMPT,
     CONFIG_TAB_NAME,
     DEFAULT_COUNTRY,
     DEFAULT_DAYS_BACK,
@@ -17,6 +18,8 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 CAMPO_PAIS = "País (gl)"
 CAMPO_DATA_INICIAL = "Data de busca inicial (opcional, formato DD/MM/AAAA)"
+CAMPO_PALAVRAS_CHAVE = "Palavras-chave de busca (opcional)"
+CAMPO_PROMPT_CLASSIFICACAO = "Critério de relevância para a IA (opcional)"
 
 DEFAULT_ROWS = [
     ["Campo", "Valor", "Observação"],
@@ -25,6 +28,16 @@ DEFAULT_ROWS = [
         CAMPO_DATA_INICIAL,
         "",
         "Deixe vazio para buscar sempre os últimos 7 dias. Preencha só para uma carga inicial maior; depois limpe este campo.",
+    ],
+    [
+        CAMPO_PALAVRAS_CHAVE,
+        "",
+        'Deixe vazio para usar os termos padrão do sistema. Se preencher, use a sintaxe do Google Notícias, ex: ("CMO" OR "Diretor de Marketing") (nomeado OR contratado). Substitui os termos padrão para todos os países selecionados.',
+    ],
+    [
+        CAMPO_PROMPT_CLASSIFICACAO,
+        "",
+        "Deixe vazio para usar o critério padrão do sistema. Se preencher, escreva em texto livre o critério que a IA deve usar para aceitar ou rejeitar uma notícia.",
     ],
 ]
 
@@ -70,4 +83,13 @@ def get_settings() -> dict:
         except (ValueError, OverflowError):
             dias_busca = DEFAULT_DAYS_BACK
 
-    return {"paises": paises, "dias_busca": dias_busca}
+    palavras_chave = _read_field(worksheet, CAMPO_PALAVRAS_CHAVE) or None
+
+    prompt_classificacao = _read_field(worksheet, CAMPO_PROMPT_CLASSIFICACAO) or CLASSIFY_SYSTEM_PROMPT
+
+    return {
+        "paises": paises,
+        "dias_busca": dias_busca,
+        "palavras_chave": palavras_chave,
+        "prompt_classificacao": prompt_classificacao,
+    }

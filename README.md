@@ -64,6 +64,18 @@ com dois campos editáveis (sem precisar tocar em código):
   carga inicial maior (ex: últimos 60 dias) — depois da execução, **limpe o campo de
   volta** para o robô voltar a usar a janela padrão de 7 dias nas próximas execuções
   semanais.
+- **Palavras-chave de busca (opcional)**: deixe vazio para usar os termos padrão do
+  sistema (definidos em `COUNTRY_PRESETS`, no `src/config.py`). Se preencher, use a
+  sintaxe de busca do Google Notícias (aspas para frases exatas, `OR` em maiúsculas
+  para alternativas), ex: `("CMO" OR "Diretor de Marketing") (nomeado OR contratado)`.
+  Esse valor substitui os termos padrão para todos os países selecionados.
+- **Critério de relevância para a IA (opcional)**: deixe vazio para usar o critério
+  padrão do sistema (`CLASSIFY_SYSTEM_PROMPT`, no `src/config.py`). Se preencher,
+  escreva em texto livre as regras que a IA deve seguir para aceitar ou rejeitar uma
+  notícia como relevante. Esse campo só controla a etapa de **classificação**
+  (sim/não relevante); a etapa de **extração dos dados estruturados** (pessoa, cargo,
+  empresa etc.) continua fixa no código, para evitar que uma edição aqui quebre o
+  formato esperado pela planilha.
 
 ## Ajustando as buscas (termos de pesquisa)
 

@@ -10,7 +10,7 @@ def main():
     print(f"Configurações lidas da planilha: {settings}")
 
     print("Buscando notícias...")
-    items = fetch_all_items(settings["paises"], settings["dias_busca"])
+    items = fetch_all_items(settings["paises"], settings["dias_busca"], settings["palavras_chave"])
     print(f"{len(items)} itens encontrados nas buscas.")
 
     unseen = filter_unseen(items)
@@ -19,7 +19,7 @@ def main():
     relevant_rows = []
     for item in unseen:
         try:
-            if is_relevant(item):
+            if is_relevant(item, settings["prompt_classificacao"]):
                 details = extract_details(item)
                 details["link"] = item["link"]
                 details["published"] = item.get("published", "")

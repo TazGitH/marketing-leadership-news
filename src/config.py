@@ -57,6 +57,9 @@ Responda NAO para:
 - Marketing genérico, tendências de mercado, conteúdo educacional sobre marketing
 - Empresas claramente pequenas, startups muito iniciais, ou pessoas físicas sem vínculo corporativo claro
 - Notícias que apenas citam o cargo de passagem, sem ser o tema central
+- Notícias de política, esporte ou outros contextos onde a sigla "CMO" (ou termo semelhante) se refere a
+  algo que NÃO é "Chief Marketing Officer" (ex: comissões partidárias, órgãos públicos, siglas militares,
+  nomes de lugares). Em caso de ambiguidade sobre o que a sigla significa, responda NAO.
 """
 
 EXTRACT_SYSTEM_PROMPT = """Extraia as informações da notícia de mudança de liderança em marketing abaixo e retorne APENAS um JSON válido
