@@ -56,7 +56,23 @@ def _get_or_create_worksheet():
     except gspread.WorksheetNotFound:
         worksheet = sheet.add_worksheet(title=CONFIG_TAB_NAME, rows=10, cols=3)
         worksheet.update("A1", DEFAULT_ROWS)
+        return worksheet
+
+    _adicionar_campos_faltantes(worksheet)
     return worksheet
+
+
+def _adicionar_campos_faltantes(worksheet):
+    """Garante que toda aba 'Configurações' já existente (criada por uma versão
+    anterior do projeto) receba as linhas de campos novos que ainda não existem."""
+    valores_atuais = worksheet.get_all_values()
+    campos_existentes = {row[0].strip() for row in valores_atuais[1:] if row}
+
+    linhas_faltantes = [
+        linha for linha in DEFAULT_ROWS[1:] if linha[0] not in campos_existentes
+    ]
+    if linhas_faltantes:
+        worksheet.append_rows(linhas_faltantes, value_input_option="USER_ENTERED")
 
 
 def _read_field(worksheet, campo: str) -> str:
