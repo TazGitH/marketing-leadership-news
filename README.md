@@ -50,11 +50,26 @@ export GOOGLE_SHEET_ID="..."
 python src/main.py
 ```
 
-## Ajustando as buscas
+## Aba "Configurações" na planilha
 
-Edite `src/config.py`, lista `SEARCH_QUERIES`, para adicionar/remover termos, idiomas ou
-países. O `when:7d` no final de cada termo limita a busca aos últimos 7 dias — ajuste se
-mudar a frequência do agendamento.
+O robô cria automaticamente uma aba chamada **"Configurações"** na primeira execução,
+com dois campos editáveis (sem precisar tocar em código):
+
+- **País (gl)**: sigla do país a buscar (ex: `BR`). Para mais de um país, separe por
+  vírgula (ex: `BR,US`). Cada sigla precisa ter um preset correspondente em
+  `COUNTRY_PRESETS` (arquivo `src/config.py`) — hoje já existem presets para `BR`, `US`
+  e `PT`. Para adicionar um novo país, basta criar uma nova entrada nesse dicionário.
+- **Data de busca inicial (opcional, formato DD/MM/AAAA)**: deixe vazio para o robô
+  buscar sempre os últimos 7 dias (padrão). Preencha apenas quando quiser fazer uma
+  carga inicial maior (ex: últimos 60 dias) — depois da execução, **limpe o campo de
+  volta** para o robô voltar a usar a janela padrão de 7 dias nas próximas execuções
+  semanais.
+
+## Ajustando as buscas (termos de pesquisa)
+
+Edite `src/config.py`, dicionário `COUNTRY_PRESETS`, para adicionar/remover termos por
+país. O período (`when:Nd`) é calculado automaticamente a partir da aba
+"Configurações" e não precisa ser editado no código.
 
 ## Ajustando o filtro de relevância
 

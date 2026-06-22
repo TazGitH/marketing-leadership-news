@@ -2,6 +2,7 @@ import datetime
 import json
 
 import gspread
+from dateutil import parser as date_parser
 from google.oauth2.service_account import Credentials
 
 from config import GOOGLE_SERVICE_ACCOUNT_JSON, GOOGLE_SHEET_ID, SHEET_TAB_NAME
@@ -9,7 +10,8 @@ from config import GOOGLE_SERVICE_ACCOUNT_JSON, GOOGLE_SHEET_ID, SHEET_TAB_NAME
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 HEADER = [
-    "Data",
+    "Data da notícia",
+    "Data de execução do robô",
     "Empresa",
     "Pessoa",
     "Cargo",
@@ -21,6 +23,15 @@ HEADER = [
     "Porte da empresa",
     "Status",
 ]
+
+
+def _formatar_data_noticia(published_raw: str) -> str:
+    if not published_raw:
+        return ""
+    try:
+        return date_parser.parse(published_raw).strftime("%d/%m/%Y")
+    except (ValueError, OverflowError):
+        return ""
 
 
 def _get_worksheet():
@@ -42,11 +53,12 @@ def append_rows(rows: list[dict]):
     if not rows:
         return
     worksheet = _get_worksheet()
-    today = datetime.date.today().isoformat()
+    today = datetime.date.today().strftime("%d/%m/%Y")
     values = []
     for row in rows:
         values.append(
             [
+                _formatar_data_noticia(row.get("published", "")),
                 today,
                 row.get("empresa", ""),
                 row.get("pessoa", ""),

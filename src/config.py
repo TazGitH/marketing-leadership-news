@@ -7,28 +7,42 @@ SHEET_TAB_NAME = os.environ.get("SHEET_TAB_NAME", "Movimentos")
 
 DB_PATH = "data/seen.sqlite3"
 
-# Cada item gera uma URL de RSS do Google News.
-# when:7d limita ao período da última semana.
-SEARCH_QUERIES = [
-    {
-        "label": "pt-BR",
+CONFIG_TAB_NAME = os.environ.get("CONFIG_TAB_NAME", "Configurações")
+
+DEFAULT_DAYS_BACK = 7
+
+# Presets de busca por país. A aba "Configurações" da planilha define quais
+# siglas de país (campo "Valor" de "País (gl)") serão usadas; cada sigla
+# precisa ter um preset aqui. Para adicionar um novo país, basta criar uma
+# nova entrada neste dicionário.
+COUNTRY_PRESETS = {
+    "BR": {
         "hl": "pt-BR",
         "gl": "BR",
         "ceid": "BR:pt",
         "terms": [
-            '("CMO" OR "Chief Marketing Officer" OR "diretor de marketing" OR "diretora de marketing" OR "VP de marketing") (nomeado OR nomeada OR assume OR contratado OR contratada OR substitui) when:7d',
+            '("CMO" OR "Chief Marketing Officer" OR "diretor de marketing" OR "diretora de marketing" OR "VP de marketing") (nomeado OR nomeada OR assume OR contratado OR contratada OR substitui)',
         ],
     },
-    {
-        "label": "en-US",
+    "US": {
         "hl": "en-US",
         "gl": "US",
         "ceid": "US:en",
         "terms": [
-            '("CMO" OR "Chief Marketing Officer" OR "VP of Marketing" OR "Head of Marketing") (joins OR appointed OR named OR hires OR promoted) when:7d',
+            '("CMO" OR "Chief Marketing Officer" OR "VP of Marketing" OR "Head of Marketing") (joins OR appointed OR named OR hires OR promoted)',
         ],
     },
-]
+    "PT": {
+        "hl": "pt-PT",
+        "gl": "PT",
+        "ceid": "PT:pt",
+        "terms": [
+            '("CMO" OR "Chief Marketing Officer" OR "diretor de marketing" OR "diretora de marketing" OR "VP de marketing") (nomeado OR nomeada OR assume OR contratado OR contratada OR substitui)',
+        ],
+    },
+}
+
+DEFAULT_COUNTRY = "BR"
 
 CLASSIFY_SYSTEM_PROMPT = """Você é um classificador de notícias de negócios. Sua única tarefa é decidir se uma notícia trata de
 MUDANÇA DE LIDERANÇA EM MARKETING (contratação, promoção, saída, nomeação) em uma empresa média ou grande.
